@@ -1,529 +1,409 @@
+<div align="center">
+
 # 🌿 Steady
 
-> A calm, focused placement preparation tracker for SDE and Cybersecurity roles
+**A calm placement-prep tracker. Your subjects, your pace, one day at a time.**
 
-**Steady** is a Progressive Web App designed to help students prepare for technical placements through structured learning, daily practice, and intelligent progress tracking—all while maintaining a peaceful, distraction-free experience.
+[![TanStack Start](https://img.shields.io/badge/TanStack_Start-1.168-FF4154?logo=react&logoColor=white)](https://tanstack.com/start)
+[![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=black)](https://react.dev)
+[![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4-06B6D4?logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
+[![Turso](https://img.shields.io/badge/Database-Turso_·_libSQL-4FF8D2?logo=sqlite&logoColor=black)](https://turso.tech)
+[![Gemini](https://img.shields.io/badge/AI-Google_Gemini-8E75B2?logo=googlegemini&logoColor=white)](https://ai.google.dev)
+[![PWA](https://img.shields.io/badge/PWA-installable-5A0FC8?logo=pwa&logoColor=white)](https://web.dev/progressive-web-apps/)
+[![Bun](https://img.shields.io/badge/Bun-runtime-f9f1e1?logo=bun&logoColor=black)](https://bun.sh)
 
----
+[Quick start](#-quick-start) · [Architecture](#-architecture) · [Features](#-whats-inside) · [Data model](#-data-model) · [AI pipeline](#-ai-pipeline) · [Deployment](#-deployment)
 
-## 📋 Table of Contents
-
-- [Features](#-features)
-- [Tech Stack](#-tech-stack)
-- [Architecture](#-architecture)
-- [Getting Started](#-getting-started)
-- [Project Structure](#-project-structure)
-- [Key Components](#-key-components)
-- [Offline Support](#-offline-support)
-- [AI-Powered Features](#-ai-powered-features)
-- [Deployment](#-deployment)
-- [Contributing](#-contributing)
-- [License](#-license)
+</div>
 
 ---
 
-## ✨ Features
+Steady is a **placement-preparation workspace** for students targeting SDE and cybersecurity roles. Pick the subjects you actually care about at signup, and Steady turns them into a dated, day-by-day plan with study tasks, AI-written topic notes, practice MCQs, mock tests, and quiet progress tracking.
 
-### 📊 **Dashboard & Analytics**
+No streak guilt, no infinite feed, no gamified noise. One screen tells you what today looks like; open a topic and the notes and questions are already written.
 
-- **Real-time progress tracking** with visual stat cards
-- **Streak monitoring** to build consistent study habits
-- **Weekly insights** showing completion rates and time invested
-- **Practice progress** at a glance
-
-### 📅 **Smart Scheduling**
-
-- **Weekly calendar view** with interactive day navigation
-- **Personalized curriculum** based on selected subjects (DSA, Cybersecurity, CS Fundamentals, Aptitude)
-- **Automatic task generation** aligned with your learning goals
-- **Flexible planning** with carry-over support for missed tasks
-
-### 🎯 **Topic-Based Practice**
-
-- **Daily practice questions** automatically generated from your scheduled topics
-- **MCQ practice** with explanations
-- **Difficulty progression** (Easy → Medium → Hard)
-- **Instant feedback** and performance tracking
-
-### 🤖 **AI-Powered Learning**
-
-- **Auto-generated study notes** using Gemini 1.5 Flash
-- **Context-aware practice questions** tailored to your daily topics
-- **Intelligent explanations** for every answer
-- **Mock test generation** for comprehensive preparation
-
-### 📱 **Progressive Web App**
-
-- **Install on any device** (mobile, tablet, desktop)
-- **Offline-first architecture** with IndexedDB storage
-- **Auto-sync** when connection is restored
-- **Native app-like experience** with no browser chrome
-
-### 🔐 **Secure & Private**
-
-- **Row-level security** with Supabase authentication
-- **User-scoped data** - only you can see your progress
-- **Secure API calls** with JWT tokens
-- **Privacy-focused** design
+```
+Today · Tue 20 Oct
+├─ 3 tasks · 2 done · 45 min left
+├─ Practice    6 / 10 solved
+└─ Next up     DSA › Recursion › Base cases   → notes ✓  practice ✓
+```
 
 ---
 
-## 🛠 Tech Stack
+## ✨ What's inside
 
-### **Frontend**
+| Area | What it does |
+| --- | --- |
+| **Onboarding** | 4 steps: name → rhythm (start date + daily hours) → subject chips → plan preview. Generates a **182-day plan** on the spot. |
+| **Dashboard** | Greeting, today's task list, practice progress, streak, and a jump into today's focus. |
+| **Day view** (`/today`) | Every task for a date, check off, carry over missed work, or spread it across the week. |
+| **Plan & schedule** | 26 weeks of subjects → sections → topics, with a weekly calendar and per-subject progress. |
+| **Topic page** | **Notes and a practice set generate themselves on open.** Markdown notes (edit + regenerate), a 6-question MCQ quiz with explanations, and a personal notes tab. |
+| **Practice** | Daily MCQ set (topic-aware, generated once per date) with instant feedback, attempt history and streak. |
+| **Mock tests** | Subject-scoped tests with a timer, question palette, and a results screen with subject-wise + question-wise analysis. |
+| **Progress** | Practice consistency calendar, accuracy, mock-test performance. |
+| **PWA** | Installable, offline reads/writes through IndexedDB, queued writes that sync when you're back online. |
 
-- **[TanStack Router](https://tanstack.com/router)** - Type-safe routing with file-based structure
-- **[React 18](https://react.dev/)** - UI library with hooks
-- **[TypeScript](https://www.typescriptlang.org/)** - Type safety and better DX
-- **[Tailwind CSS](https://tailwindcss.com/)** - Utility-first styling
-- **[shadcn/ui](https://ui.shadcn.com/)** - Accessible component primitives
-- **[TanStack Query](https://tanstack.com/query)** - Server state management
+### The 60-second version of the flow
 
-### **Backend & Database**
+1. **Sign up** → onboarding asks four questions.
+2. Steady seeds **subjects → sections → topics** and a **182-day task plan** into your own rows.
+3. Every day you open `/today`, tick off tasks, and do the practice set.
+4. Open any topic → notes and 6 MCQs appear (cached forever after the first visit).
+5. Sunday-ish: take a mock test, review weak subjects in `/progress`.
 
-- **[Supabase](https://supabase.com/)** - PostgreSQL database with real-time subscriptions
-- **[Supabase Auth](https://supabase.com/auth)** - Email/password authentication
-- **[Supabase Edge Functions](https://supabase.com/edge-functions)** - Serverless functions (Deno)
-- **[Row-Level Security (RLS)](https://supabase.com/docs/guides/auth/row-level-security)** - Data access policies
+<p align="center">
+  <img src="docs/screenshots/topic-notes.png" alt="AI-generated study notes for a topic" width="49%">
+  <img src="docs/screenshots/topic-practice.png" alt="Auto-generated practice questions for the same topic" width="49%">
+</p>
+<p align="center"><sub>Open a topic and both the notes and the quiz are already written — no "generate" button.</sub></p>
 
-### **Offline & PWA**
+---
 
-- **[Dexie.js](https://dexie.org/)** - IndexedDB wrapper for offline storage
-- **[Workbox](https://developer.chrome.com/docs/workbox/)** - Service worker strategies
-- **[vite-plugin-pwa](https://vite-pwa-org.netlify.app/)** - PWA manifest and SW generation
+## 🧱 Tech stack
 
-### **AI & ML**
-
-- **[Google Gemini 1.5 Flash](https://ai.google.dev/)** - Generative AI for notes and questions
-- **Structured output** with JSON schema validation
-- **Rate limiting** and error handling
-
-### **Dev Tools**
-
-- **[Vite](https://vitejs.dev/)** - Fast build tool and dev server
-- **[Bun](https://bun.sh/)** - Fast JavaScript runtime and package manager
-- **[Prettier](https://prettier.io/)** - Code formatting
-- **[ESLint](https://eslint.org/)** - Code linting
+| Layer | Choice | Why |
+| --- | --- | --- |
+| Framework | **TanStack Start** (React 19, SSR) | File-based routing, server functions, one deployable app |
+| Routing | **TanStack Router** | Fully typed routes, `beforeLoad` guards, search params as state |
+| Data fetching | **TanStack Query** | Cache, background refetch, optimistic task toggles |
+| Server | **TanStack Start server functions** (`createServerFn`) | Type-safe RPC, no separate API layer |
+| Database | **Turso / libSQL** (SQLite) | Local file in dev, hosted libSQL in prod — same SQL |
+| Auth | **bcryptjs + HTTP-only cookie sessions** | No third-party auth dependency |
+| AI | **Google Gemini** (`generateContent`) | Notes, MCQs, mock tests, code review |
+| UI | **Tailwind CSS 4**, shadcn/ui (Radix), lucide icons | Calm, accessible primitives |
+| Offline | **Dexie** (IndexedDB) + **Workbox** service worker | Practice keeps working on a train |
+| Tooling | **Bun**, Vite 8, Vitest, ESLint, Prettier | Fast installs and builds |
 
 ---
 
 ## 🏗 Architecture
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                         Client (PWA)                         │
-│  ┌─────────────┐  ┌──────────────┐  ┌──────────────────┐   │
-│  │   React     │  │  TanStack    │  │   IndexedDB      │   │
-│  │ Components  │──│   Router     │──│   (Dexie)        │   │
-│  │   + Hooks   │  │  + Query     │  │  Offline Storage │   │
-│  └─────────────┘  └──────────────┘  └──────────────────┘   │
-│         │                 │                    │             │
-│         └─────────────────┴────────────────────┘             │
-│                           │                                  │
-└───────────────────────────┼──────────────────────────────────┘
-                            │ HTTPS + JWT Auth
-                            ↓
-┌─────────────────────────────────────────────────────────────┐
-│                    Supabase Backend                          │
-│  ┌──────────────┐  ┌──────────────┐  ┌──────────────────┐  │
-│  │  PostgreSQL  │  │  Auth Server │  │  Edge Functions  │  │
-│  │  + RLS       │  │  (JWT)       │  │  (Deno Runtime)  │  │
-│  └──────────────┘  └──────────────┘  └──────────────────┘  │
-│         │                                     │              │
-│         │                                     ↓              │
-│         │                          ┌────────────────────┐   │
-│         │                          │  Gemini 1.5 Flash  │   │
-│         │                          │  API (Google AI)   │   │
-│         │                          └────────────────────┘   │
-└─────────────────────────────────────────────────────────────┘
+The whole app is **one TanStack Start deployment**: the browser talks to typed server functions, those functions are the only things allowed to touch SQLite, and Gemini is called exclusively from the server.
+
+```mermaid
+flowchart LR
+  subgraph Browser["Browser · installable PWA"]
+    direction TB
+    UI["React 19 pages<br/>TanStack Router"]
+    Q["TanStack Query<br/>cache · optimistic updates"]
+    IDB[("IndexedDB<br/>Dexie")]
+    SW["Service worker<br/>Workbox precache"]
+  end
+
+  subgraph Server["TanStack Start server (Nitro)"]
+    direction TB
+    MW["Request middleware<br/>error page + CSRF"]
+    RPC["Server functions<br/>src/lib/data.ts · auth.ts"]
+    GATE["Session guard<br/>cookie → users"]
+    STORE["store.ts<br/>all SQL, scoped by user_id"]
+    AI["gemini.ts<br/>model chain + retries"]
+  end
+
+  DB[("Turso / libSQL<br/>SQLite")]
+  GEM["Google Gemini API"]
+
+  UI --> Q
+  Q -->|RPC| RPC
+  UI -.->|offline reads/writes| IDB
+  IDB -.->|flush queue on reconnect| RPC
+  SW -.->|app shell| UI
+  RPC --> GATE
+  RPC --> STORE --> DB
+  RPC --> AI --> GEM
 ```
 
-### Data Flow
+### The boundary that keeps it honest
 
+`vite.config.ts` turns on TanStack Start's **import protection**: any client-reachable file that statically imports `**/server/**` fails the build. Server-only modules (`db`, `store`, `schema`, `gemini`) are always loaded through a **dynamic `import()` inside a `.handler()` callback**:
+
+```ts
+// src/lib/data.ts — the only shape client code sees
+const getTasksFn = createServerFn({ method: "GET" })
+  .validator(() => undefined)
+  .handler(async () => {
+    const { viewer } = await getViewerFn();          // typed RPC, not a global
+    if (!viewer) throw new Error("Not signed in");
+    const store = await import("./server/store");    // server-only, runtime-loaded
+    return await store.getTasks(viewer.id);
+  });
 ```
-User Action
-    ↓
-React Component
-    ↓
-TanStack Query (useQuery / useMutation)
-    ↓
-├─ Online?
-│   ├─ Yes → Supabase Client → PostgreSQL
-│   │                           ↓
-│   │                      RLS Policy Check
-│   │                           ↓
-│   │                      Return Data
-│   │
-│   └─ No  → IndexedDB (Dexie)
-│                ↓
-│           Add to Sync Queue
-│                ↓
-│         (Store locally)
-│
-└─ On Reconnect → Process Sync Queue
-                      ↓
-                  Upload to Supabase
-                      ↓
-                  Mark as Synced
+
+### Opening a topic (the most interesting path)
+
+```mermaid
+sequenceDiagram
+  autonumber
+  participant U as Student
+  participant P as Topic page
+  participant F as Server functions
+  participant DB as Turso
+  participant AI as Gemini
+
+  U->>P: opens a topic
+  P->>F: getViewerFn()
+  F-->>P: { viewer }  (null → redirect /auth)
+  P->>F: getTopicNote + useTopicPracticeSet
+  F->>DB: SELECT … WHERE user_id = ?
+  DB-->>F: cached note / practice set (if any)
+  F-->>P: note + set (or null)
+
+  par notes missing
+    P->>F: generateTopicNotes(topic, subject)
+    F->>AI: structured prompt
+    AI-->>F: markdown
+    F->>DB: UPSERT topic_notes (version + 1)
+  and practice missing
+    P->>F: generateTopicPractice(topic, 6)
+    F->>AI: MCQ prompt + JSON schema
+    AI-->>F: { questions: [...] }
+    F->>DB: UPSERT practice_sets (kind = 'topic')
+  end
+
+  P-->>U: notes + 6 questions, no buttons pressed
 ```
+
+First visit waits on Gemini (seconds to a minute); every later visit is a single indexed SQLite read.
+
+### Defence in depth
+
+| Concern | Handling |
+| --- | --- |
+| Auth | `steady_session` HttpOnly, `SameSite=Lax`, `Secure` in production, 30-day expiry, bcrypt hashes (cost 10) |
+| Authorisation | Every SQL statement filters by `user_id` — the SQLite stand-in for RLS |
+| CSRF | `createCsrfMiddleware` on all server-function requests (`src/start.ts`) |
+| Secrets | `GEMINI_API_KEY`, `TURSO_AUTH_TOKEN` only in server env; `.env` is git-ignored |
+| Rate limits | 40 AI calls/hour per user, with a calm UI message |
+| SSR failures | Request middleware + a server entry wrapper turn swallowed h3 errors into a styled 500 page |
 
 ---
 
-## 🚀 Getting Started
+## 🗄 Data model
 
-### Prerequisites
+13 tables, no ORM, everything created with `CREATE TABLE IF NOT EXISTS` on first use.
 
-- **Node.js 18+** or **Bun 1.0+**
-- **Supabase account** ([sign up free](https://supabase.com/))
-- **Google AI API key** ([get one here](https://makersuite.google.com/app/apikey))
+```mermaid
+erDiagram
+  users ||--o{ sessions : "has"
+  users ||--|| profiles : "has"
+  users ||--o{ subjects : "owns"
+  users ||--o{ tasks : "plans"
+  users ||--o{ practice_sets : "generates"
+  users ||--o{ practice_days : "scores"
+  users ||--o{ topic_notes : "writes"
+  users ||--o{ mock_tests : "takes"
+  subjects ||--o{ sections : "contains"
+  sections ||--o{ topics : "contains"
+  topics ||--o| topic_notes : "explained by"
+  topics ||--o{ practice_sets : "practised by"
+  practice_sets ||--o{ practice_attempts : "answers"
+  topic_notes ||--o{ topic_note_versions : "revisions"
+```
 
-### Installation
+<details>
+<summary><b>Table reference</b></summary>
 
-1. **Clone the repository**
+| Table | Purpose |
+| --- | --- |
+| `users`, `sessions` | Email + bcrypt hash; opaque session tokens with expiry |
+| `profiles` | Name, start date, daily target minutes, selected subjects, `plan_loaded` |
+| `subjects` → `sections` → `topics` | Per-user copy of the curriculum tree; topics hold status, personal notes, resources |
+| `tasks` | Dated plan items (`date`, `est_minutes`, `done`, `carried_over`) |
+| `practice_sets` | One row per (user, date, kind); `kind` is `daily` \| `topic` \| `mock`. Topic sets store `date = topicId` so each topic's quiz is generated once and reused |
+| `practice_attempts` | Every answer: question index, selected option, correctness, time |
+| `practice_days` | Aggregated solved/total per date (feeds the streak and the consistency calendar) |
+| `topic_notes`, `topic_note_versions` | AI notes with version history for manual edits |
+| `mock_tests` | Test definition, answers, timing, score, per-subject breakdown |
 
-   ```bash
-   git clone https://github.com/yourusername/steady.git
-   cd steady
-   ```
-
-2. **Install dependencies**
-
-   ```bash
-   bun install
-   # or
-   npm install
-   ```
-
-3. **Set up environment variables**
-
-   Create a `.env` file in the project root:
-
-   ```env
-   # Supabase Configuration
-   SUPABASE_PROJECT_ID="your-project-id"
-   SUPABASE_PUBLISHABLE_KEY="your-publishable-key"
-   SUPABASE_URL="https://your-project.supabase.co"
-
-   VITE_SUPABASE_PROJECT_ID="your-project-id"
-   VITE_SUPABASE_PUBLISHABLE_KEY="your-publishable-key"
-   VITE_SUPABASE_URL="https://your-project.supabase.co"
-
-   # Gemini AI API Key
-   GEMINI_API_KEY="your-gemini-api-key"
-   ```
-
-4. **Set up Supabase database**
-
-   Run the migration to create tables:
-
-   ```bash
-   npx supabase db push
-   ```
-
-5. **Deploy Edge Functions**
-
-   Deploy the AI function to Supabase:
-
-   ```bash
-   npx supabase functions deploy ai
-   ```
-
-   Set the Gemini API key secret:
-
-   ```bash
-   npx supabase secrets set GEMINI_API_KEY="your-gemini-api-key"
-   ```
-
-6. **Start the development server**
-
-   ```bash
-   bun run dev
-   # or
-   npm run dev
-   ```
-
-   Open [http://localhost:8080](http://localhost:8080)
+</details>
 
 ---
 
-## 📁 Project Structure
+## 📁 Project structure
 
-```
+```text
 steady/
-├── src/
-│   ├── routes/                    # File-based routing
-│   │   ├── __root.tsx            # Root layout
-│   │   ├── index.tsx             # Landing page
-│   │   ├── auth.tsx              # Authentication page
-│   │   └── _authenticated/       # Protected routes
-│   │       ├── dashboard.tsx     # Dashboard with stats
-│   │       ├── today.tsx         # Today's tasks & practice
-│   │       ├── practice.tsx      # Practice question UI
-│   │       ├── schedule.tsx      # Weekly schedule view
-│   │       ├── progress.tsx      # Analytics & charts
-│   │       ├── subjects/         # Subject pages
-│   │       └── topic.$topicId.tsx # Topic detail page
-│   │
-│   ├── components/
-│   │   ├── steady/               # App-specific components
-│   │   │   ├── AppShell.tsx     # Main layout with sidebar
-│   │   │   ├── Onboarding.tsx   # User onboarding flow
-│   │   │   ├── NetworkStatus.tsx # Offline indicator
-│   │   │   ├── InstallPrompt.tsx # PWA install prompt
-│   │   │   └── kit.tsx          # Shared UI primitives
-│   │   └── ui/                   # shadcn/ui components
-│   │
-│   ├── lib/
-│   │   ├── data.ts               # Data fetching & mutations
-│   │   ├── curriculum.ts         # 26-week plan generator
-│   │   ├── ai.ts                 # AI API client functions
-│   │   ├── db.ts                 # Dexie database schema
-│   │   ├── offline.ts            # Offline sync logic
-│   │   ├── pwa.ts                # Service worker registration
-│   │   └── utils.ts              # Utility functions
-│   │
-│   ├── integrations/
-│   │   └── supabase/             # Supabase client config
-│   │
-│   └── styles.css                # Global styles & Tailwind
-│
-├── supabase/
-│   ├── functions/
-│   │   └── ai/                   # Edge function for AI calls
-│   │       └── index.ts
-│   └── migrations/               # Database migrations
-│
-├── public/
-│   ├── icon.svg                  # App icon
-│   └── favicon.ico               # Browser favicon
-│
-├── vite.config.ts                # Vite configuration
-├── tailwind.config.ts            # Tailwind CSS config
-├── tsconfig.json                 # TypeScript config
-└── package.json                  # Dependencies
+├─ src/
+│  ├─ routes/
+│  │  ├─ index.tsx                 landing page (public)
+│  │  ├─ auth.tsx                  sign in / sign up
+│  │  ├─ __root.tsx                document shell, providers, PWA wiring
+│  │  └─ _authenticated/           every signed-in page
+│  │     ├─ route.tsx              session guard + onboarding gate + AppShell
+│  │     ├─ dashboard.tsx          today at a glance
+│  │     ├─ today.tsx              day view, carry-over, practice card
+│  │     ├─ schedule.tsx           weekly calendar
+│  │     ├─ subjects.index.tsx      subject cards + progress
+│  │     ├─ subjects.$subjectId.tsx one subject's sections and topics
+│  │     ├─ topic.$topicId.tsx     notes + practice + personal notes
+│  │     ├─ practice.tsx           daily MCQ session
+│  │     ├─ mock-tests.tsx         test list + generation
+│  │     ├─ mock-test.$testId*.tsx test runner + results
+│  │     └─ progress.tsx           consistency + performance
+│  ├─ components/
+│  │  ├─ steady/                   AppShell, Onboarding, kit (Card, Shimmer, CalmError)
+│  │  └─ ui/                       shadcn/Radix primitives
+│  ├─ lib/
+│  │  ├─ data.ts                   ~30 typed server functions + React Query hooks
+│  │  ├─ auth.ts                   signUp/signIn/signOut, getViewerFn, useSession
+│  │  ├─ curriculum.ts             subject seeds + 182-day plan generator
+│  │  ├─ offline.ts                Dexie schema, sync queue, auto-sync
+│  │  ├─ pwa.ts                    service-worker registration + update prompt
+│  │  └─ server/                   ⚠️ server-only (build-enforced)
+│  │     ├─ db.ts                  lazy libSQL client, migrate(), typed helpers
+│  │     ├─ schema.ts              single source of truth for all DDL
+│  │     ├─ store.ts               every SQL query, all scoped by user_id
+│  │     └─ gemini.ts              model chain, retries, prompts, JSON schemas
+│  ├─ start.ts                     request middleware (errors + CSRF)
+│  ├─ server.ts                    SSR entry with a styled 500 fallback
+│  └─ styles.css                   Tailwind theme tokens (calm palette)
+├─ data/                           local SQLite (git-ignored)
+├─ TURSO_SETUP.md                  local → Turso Cloud guide
+├─ AGENTS.md                       conventions for AI coding agents
+└─ vite.config.ts                  plugin chain, import protection, PWA config
 ```
 
 ---
 
-## 🔑 Key Components
+## 🚀 Quick start
 
-### **Dashboard**
-
-Entry point showing:
-
-- 4 stat cards (streak, tasks, practice, time)
-- Today's Practice CTA
-- Weekly overview
-- Quick links
-
-### **Schedule**
-
-Weekly calendar with:
-
-- 7-day grid (Sunday → Saturday)
-- Task count and progress per day
-- Click-to-navigate to any day
-- Daily task breakdown
-
-### **Today**
-
-Daily task management:
-
-- Task list with checkboxes
-- Practice progress card
-- Notes per task
-- Carry-over for missed items
-
-### **Practice**
-
-Question interface:
-
-- MCQ display
-- Option selection
-- Instant feedback
-- Explanations
-- Progress tracking
-
-### **Subjects & Topics**
-
-Learning resources:
-
-- Subject overview
-- Topic list
-- AI-generated study notes
-- Practice questions per topic
-
----
-
-## 💾 Offline Support
-
-### **How It Works**
-
-1. **Service Worker** caches app shell and assets
-2. **IndexedDB** stores user data via Dexie
-3. **Sync Queue** tracks pending operations
-4. **Auto-sync** uploads changes when online
-
-### **Offline Storage Tables**
-
-| Table              | Purpose                 |
-| ------------------ | ----------------------- |
-| `practiceSets`     | Cached question sets    |
-| `practiceAttempts` | Answer submissions      |
-| `practiceDays`     | Daily progress          |
-| `topicNotes`       | Study notes             |
-| `mockTests`        | Mock test data          |
-| `syncQueue`        | Pending sync operations |
-
-### **Sync Strategy**
-
-- **NetworkFirst** for API calls (fallback to cache)
-- **CacheFirst** for static assets
-- **Retry logic** with exponential backoff
-- **Conflict resolution** (last-write-wins)
-
----
-
-## 🤖 AI-Powered Features
-
-### **Study Notes Generation**
-
-```typescript
-// Generate notes for a topic
-const response = await generateTopicNotes("Arrays", "DSA");
-// Returns: Markdown-formatted study notes
-```
-
-### **Daily Practice Questions**
-
-```typescript
-// Generate questions based on today's topics
-const response = await generateDailyPractice(
-  ["Arrays", "Network Security"],
-  10, // number of questions
-);
-// Returns: Array of MCQ objects with explanations
-```
-
-### **Features**
-
-- **Context-aware** - Questions match your daily curriculum
-- **Difficulty progression** - Easy to hard mix
-- **Detailed explanations** - Learn from mistakes
-- **Rate limited** - 40 calls/hour per user
-
----
-
-## 🚢 Deployment
-
-### **Deploy to Vercel/Netlify**
-
-1. **Build the app**
-
-   ```bash
-   bun run build
-   ```
-
-2. **Deploy**
-   - Connect your Git repository
-   - Set environment variables
-   - Deploy automatically on push
-
-### **Deploy Edge Functions**
+**Requirements:** [Bun](https://bun.sh) 1.2+ (Node 20+ also works). No database install needed.
 
 ```bash
-npx supabase functions deploy ai --project-ref your-project-id
+git clone https://github.com/ayushjha-dev/Steady.git
+cd Steady
+bun install
+cp .env.example .env     # Windows: copy .env.example .env
+bun run dev              # → http://localhost:3000
 ```
 
-### **Set Production Secrets**
+Then sign up. The first signup creates the SQLite schema in `data/steady.db` and seeds your plan. Add a Gemini key to `.env` to turn on notes and practice generation:
 
-```bash
-npx supabase secrets set GEMINI_API_KEY="your-key" --project-ref your-project-id
+```env
+TURSO_DATABASE_URL="file:./data/steady.db"
+TURSO_AUTH_TOKEN=""
+GEMINI_API_KEY="your-key-from-aistudio.google.com/apikey"
 ```
+
+<details>
+<summary><b>Environment variables</b></summary>
+
+| Variable | Required | Default | Notes |
+| --- | --- | --- | --- |
+| `TURSO_DATABASE_URL` | no | `file:./data/steady.db` | `libsql://…` for Turso Cloud |
+| `TURSO_AUTH_TOKEN` | cloud only | — | Database token with read-write access |
+| `GEMINI_API_KEY` | for AI | — | Used exactly as issued by AI Studio |
+| `NITRO_PRESET` | no | `node-server` | Build-time only, e.g. `cloudflare-module` |
+
+</details>
+
+<details>
+<summary><b>Scripts</b></summary>
+
+| Command | What it does |
+| --- | --- |
+| `bun run dev` | Vite dev server with HMR on `:3000` |
+| `bun run build` | Client build + Nitro server into `.output/` |
+| `bun run preview` | Preview the production build |
+| `bun run test` | Vitest (jsdom + Testing Library) |
+| `bun run lint` / `bun run format` | ESLint / Prettier |
+
+</details>
 
 ---
 
-## 🎨 Design Philosophy
+## 🤖 AI pipeline
 
-### **Calm & Focused**
+All model calls live in `src/lib/server/gemini.ts`; the browser only ever sees `{ data, error, remaining }`.
 
-- Minimal distractions
-- Soft color palette
-- Generous whitespace
-- Clear typography
+- **Tasks:** `notes`, `daily_practice`, `topic_practice`, `mock_test`, `check_code`.
+- **Model chain:** `gemini-3.7-flash` → `gemini-flash-lite-latest` → `gemini-3.1-flash-lite` → `gemini-3.6-flash` → `gemini-3.5-flash`. Google's free tier returns transient `503 high demand` per model, so failures rotate to the next one.
+- **Retries:** up to 7 attempts across the chain on `429`, `5xx`, network errors and truncated JSON; capped exponential backoff; 35s timeout per attempt.
+- **Structured output:** MCQs are requested with `responseMimeType: application/json` + a `responseSchema` (`question`, 4 `options`, `correct_index`, `explanation`, `difficulty`), then passed through a fence-tolerant parser.
+- **Caching:** notes are stored per topic; practice sets are stored per topic (and per date for the daily set). Re-opening a page never re-calls the model.
+- **Quota:** 40 calls/hour/user; the UI shows a gentle "take a breath" message instead of an error.
 
-### **Mobile-First**
+> Free-tier reality check: the first generation of a topic can take 10–60s (or longer during Google demand spikes). Everything after that is instant.
 
-- Responsive layouts
-- Touch-optimized
-- Native app feel
-- Fast load times
+---
 
-### **Accessible**
+## 📴 Offline & PWA
 
-- WCAG AA compliant
-- Keyboard navigation
-- Screen reader support
-- High contrast mode
+- Installable manifest + Workbox service worker with `autoUpdate`.
+- Google Fonts cached for a year (`CacheFirst`); app shell precached.
+- `src/lib/offline.ts` mirrors practice sets, attempts, notes and mock tests into IndexedDB and keeps a **sync queue**; `setupAutoSync()` flushes it when the browser comes back online.
+- `NetworkStatus` surfaces offline state without blocking the UI.
+
+---
+
+## ☁️ Deployment
+
+`bun run build` emits a self-contained Nitro server:
+
+```bash
+bun run build
+node .output/server/index.mjs      # serves on :3000
+```
+
+| Target | How |
+| --- | --- |
+| **Node / VPS / Docker** | Default preset (`node-server`); ship `.output/` and set env vars |
+| **Vercel / Netlify / Cloudflare** | `NITRO_PRESET=<preset> bun run build` |
+| **Database** | Point `TURSO_DATABASE_URL` at `libsql://…` and add `TURSO_AUTH_TOKEN`; schema self-migrates on first signup |
+| **Secrets** | Set `GEMINI_API_KEY` and the Turso vars in the host's environment — never in the repo |
+
+Full database walkthrough (local file, Turso Cloud, copying data): **[TURSO_SETUP.md](TURSO_SETUP.md)**.
 
 ---
 
 ## 🧪 Testing
 
 ```bash
-# Run all tests
-bun test
-
-# Format code
-bun run format
-
-# Lint code
+bun run test     # Vitest + Testing Library
 bun run lint
-
-# Type check
-bun run typecheck
 ```
 
----
-
-## 📜 License
-
-MIT License - see [LICENSE](LICENSE) file for details
+The suite covers app routing; the AI and database layers are exercised end-to-end (signup → onboarding → plan → notes → practice) against a real libSQL database during development.
 
 ---
 
-## 👥 Contributing
+## 🎨 Design principles
 
-Contributions welcome! Please:
-
-1. Fork the repository
-2. Create a feature branch
-3. Commit your changes
-4. Push to the branch
-5. Open a Pull Request
+1. **Calm over clever.** Muted palette, generous whitespace, no red badges for being behind.
+2. **One shell.** Every signed-in page renders inside `AppShell` — sidebar on desktop, tab bar on mobile.
+3. **Plans are per-user data, not a hardcoded calendar.** The landing page never promises a duration; the plan length lives in `curriculum.ts`.
+4. **No dead ends.** Missing notes or questions are generated, not hidden behind a button; failures offer one clear retry.
+5. **Server owns the truth.** Client state is a cache; SQL is the source of truth, always scoped by `user_id`.
 
 ---
 
-## 🙏 Acknowledgments
+## 🗺 Roadmap & known gaps
 
-- **[Supabase](https://supabase.com/)** - Backend infrastructure
-- **[Google AI](https://ai.google.dev/)** - Generative AI capabilities
-- **[shadcn/ui](https://ui.shadcn.com/)** - Component library
+- [ ] Weekly Review page (currently a placeholder at `/review`)
+- [ ] Spaced-repetition "revise" queue built from practice attempt history
+- [ ] Code-editor practice (`check_code` endpoint exists, UI is not wired)
+- [ ] Shareable plan export (ICS / PDF)
+- [ ] Move the AI rate limiter from per-process memory to the database for multi-instance deploys
+- [ ] Clean up the remaining TypeScript strict-mode errors in the mock-test runner
 
 ---
 
-## 📞 Support
+## 📚 Docs
 
-- 📧 Email: support@steady.app
-- 🐛 Issues: [GitHub Issues](https://github.com/yourusername/steady/issues)
-- 💬 Discussions: [GitHub Discussions](https://github.com/yourusername/steady/discussions)
+| File | Contents |
+| --- | --- |
+| [TURSO_SETUP.md](TURSO_SETUP.md) | Local SQLite, Turso Cloud, copying data, troubleshooting |
+| [AGENTS.md](AGENTS.md) | Repo conventions for AI coding agents |
+| [src/routes/README.md](src/routes/README.md) | File-based routing conventions |
 
 ---
 
 <div align="center">
 
-**Made with 🌿 for focused learning**
+**Your subjects · your pace · 1 day at a time**
 
-[Website](https://steady.app) • [Documentation](https://docs.steady.app) • [Changelog](CHANGELOG.md)
+Built with TanStack Start, Turso and a lot of quiet evenings.
 
 </div>
