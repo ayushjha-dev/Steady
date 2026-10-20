@@ -1,0 +1,4 @@
+- Steady data lives in Turso (libSQL/SQLite) — server-only access via `src/lib/server/store.ts`, reached through TanStack Start server functions in `src/lib/data.ts` and `src/lib/auth.ts`. Every query is scoped by user_id in SQL (that replaces RLS). Local dev uses `file:./data/steady.db`; see `TURSO_SETUP.md`.
+- The plan is generated client-side in src/lib/curriculum.ts and inserted on onboarding — keeps the seed editable in one place.
+- All signed-in pages live under src/routes/_authenticated and render inside components/steady/AppShell — one shell for sidebar/tab bar.
+- Client code must never statically import `src/lib/server/**` (build error); server modules load via dynamic `import()` inside `.handler()` callbacks.

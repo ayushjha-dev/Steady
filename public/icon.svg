@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
+  <!-- Leaf icon in primary sage color -->
+  <path 
+    d="M21 3C21 3 18.5 5.5 16 8C13.5 10.5 12 12.5 11 14C10 15.5 9.5 17 9.5 18.5C9.5 20 10 21 11 21.5C12 22 13 22 14 21.5C15 21 16 20 17 18.5C18 17 19 15 20.5 12.5C22 10 23 7 23 5C23 4 22.5 3 21 3Z" 
+    fill="#6B9B8E"
+    stroke="#6B9B8E"
+    stroke-width="1.5"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+  <path 
+    d="M11 14L3 22" 
+    stroke="#6B9B8E"
+    stroke-width="1.5"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+</svg>
